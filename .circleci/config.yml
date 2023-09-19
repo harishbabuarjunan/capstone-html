@@ -5,6 +5,18 @@ orbs:
   kubernetes: circleci/kubernetes@0.4.0
 
 jobs:
+  linting-html:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm install htmlhint
+      - run:
+          name: HTML Linting
+          command: htmlhint ./index.html
+
   build-upload-image:
     docker:
       - image: circleci/node:14 # Use a CircleCI Docker image as the build environment
@@ -101,23 +113,26 @@ jobs:
 workflows:
   deployment:
     jobs:
-      - build-upload-image
-      - create-small-cluster:
-          cluster-name: eks-demo-deployment
-          requires:
-            - build-upload-image
-      - create-service:
-          cluster-name: eks-demo-deployment
-          requires:
-            - create-small-cluster
-      - create-deployment:
-          cluster-name: eks-demo-deployment
-          requires:
-            - create-service
-      - aws-eks/update-container-image:
-          cluster-name: eks-demo-deployment
-          container-image-updates: "blue=deployment.json:latest"
-          record: true
-          requires:
-            - create-deployment
-          resource-name: deployment/blue
+      - linting-html
+      # - build-upload-image:
+      #     requires:
+      #       - linting-html
+      # - create-small-cluster:
+      #     cluster-name: eks-demo-deployment
+      #     requires:
+      #       - build-upload-image
+      # - create-service:
+      #     cluster-name: eks-demo-deployment
+      #     requires:
+      #       - create-small-cluster
+      # - create-deployment:
+      #     cluster-name: eks-demo-deployment
+      #     requires:
+      #       - create-service
+      # - aws-eks/update-container-image:
+      #     cluster-name: eks-demo-deployment
+      #     container-image-updates: "blue=deployment.json:latest"
+      #     record: true
+      #     requires:
+      #       - create-deployment
+      #     resource-name: deployment/blue
