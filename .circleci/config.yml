@@ -36,10 +36,6 @@ jobs:
         description: |
           capstone1
         type: string
-      aws-region:
-        description: |
-          us-east-2
-        type: string
     steps:
       - checkout
       - kubernetes/install
@@ -62,11 +58,9 @@ jobs:
             rmdir eksctl_download
       - aws-eks/install-aws-iam-authenticator:
           cluster-name: << parameters.cluster-name >>
-          aws-region: <<parameters.aws-region >>
           release-tag: ""
       - aws-eks/create-cluster:
           cluster-name: << parameters.cluster-name >>
-          aws-region: <<parameters.aws-region >>
           verbose: 3
           node-type: t2.small
           nodes-max: 2
@@ -80,15 +74,10 @@ jobs:
         description: |
           capstone1
         type: string
-      aws-region:
-        description: |
-          us-east-2
-        type: string
     steps:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
-          aws-region: <<parameters.aws-region >>
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           resource-file-path: service.json
@@ -101,15 +90,10 @@ jobs:
         description: |
           capstone1
         type: string
-      aws-region:
-        description: |
-          us-east-2
-        type: string
     steps:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
-          aws-region: <<parameters.aws-region >>
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
@@ -122,17 +106,14 @@ workflows:
       - build-upload-image
       - create-small-cluster:
           cluster-name: eks-demo-deployment
-          aws-region: us-east-2
           requires:
             - build-upload-image
       - create-service:
           cluster-name: eks-demo-deployment
-          aws-region: us-east-2
           requires:
             - create-small-cluster
       - create-deployment:
           cluster-name: eks-demo-deployment
-          aws-region: us-east-2
           requires:
             - create-service
       - aws-eks/update-container-image:
