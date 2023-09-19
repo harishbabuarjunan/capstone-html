@@ -34,11 +34,11 @@ jobs:
     parameters:
       cluster-name:
         description: |
-          Name of the EKS cluster
+          capstone1
         type: string
       aws-region:
         description: |
-          Aws region us-east-2
+          us-east-2
         type: string
     steps:
       - checkout
@@ -78,11 +78,11 @@ jobs:
     parameters:
       cluster-name:
         description: |
-          Name of the EKS cluster
+          capstone1
         type: string
       aws-region:
         description: |
-          Aws region us-east-2
+          us-east-2
         type: string
     steps:
       - checkout
@@ -99,12 +99,12 @@ jobs:
     parameters:
       cluster-name:
         description: |
-          Name of the EKS cluster
+          capstone1
         type: string
-        aws-region:
-          description: |
-            Aws region us-east-2
-          type: string
+      aws-region:
+        description: |
+          us-east-2
+        type: string
     steps:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
@@ -121,15 +121,15 @@ workflows:
     jobs:
       - build-upload-image
       - create-small-cluster:
-        cluster-name: eks-demo-deployment
-        aws-region: us-east-2
-        requires:
-          - build-upload-image
+          cluster-name: eks-demo-deployment
+          aws-region: us-east-2
+          requires:
+            - build-upload-image
       - create-service:
-        cluster-name: eks-demo-deployment
-        aws-region: us-east-2
-        requires:
-          - create-small-cluster
+          cluster-name: eks-demo-deployment
+          aws-region: us-east-2
+          requires:
+            - create-small-cluster
       - create-deployment:
           cluster-name: eks-demo-deployment
           aws-region: us-east-2
