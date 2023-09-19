@@ -12,10 +12,10 @@ jobs:
       - checkout
       - run:
           name: Install Dependencies
-          command: npm install htmlhint
+          command: npm install
       - run:
           name: HTML Linting
-          command: htmlhint ./index.html
+          command: npm run lint:html
 
   build-upload-image:
     docker:
