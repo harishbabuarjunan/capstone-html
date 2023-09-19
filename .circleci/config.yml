@@ -81,8 +81,11 @@ version: 2.1
 workflows:
   deployment:
     jobs:
+      - build-upload-image
       - create-small-cluster:
           cluster-name: eks-demo-deployment
+          requires:
+            - build-upload-image
       - create-service:
           cluster-name: eks-demo-deployment
           requires:
