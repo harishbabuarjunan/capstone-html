@@ -63,6 +63,7 @@ jobs:
         type: string
     steps:
       - checkout
+      - kubernetes/install
       - aws-eks/install-aws-iam-authenticator:
           release-tag: ""
       - aws-eks/create-cluster:
